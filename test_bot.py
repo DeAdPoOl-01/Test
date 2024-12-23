@@ -61,3 +61,28 @@ async def send_code(message: types.Message):
                 var = ok == False
                 break
 
+ if ok == True:
+            phone = message.text
+            user_data[user_id]['phone'] = phone
+            verification_code = randint(100000, 999999)
+            user_data[user_id]['verification_code'] = verification_code
+            await message.answer(f"Nomerizga tasdiqlash ko'di yuborildi\n"
+                                 f"Iltimos kodni kiriting: {verification_code}")
+
+    else:
+        await message.answer('Hato nomer kiritildi')
+    print(user_data)
+
+async def check_code(message: types.Message):
+    user_id = message.from_user.id
+    code = message.text
+    verification_code = user_data[user_id]['verification_code']
+    if str(verification_code) == code:
+        user_data[user_id]['status'] = 'verified'
+        await message.answer("Nomeringiz tasdiqlandi")
+        await ask_location(message)
+    else:
+        await message.answer('Kod hato terildi. Yana urunib koring')
+    print(user_data)
+
+
